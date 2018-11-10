@@ -7,6 +7,7 @@
 
 from .imdb import imdb
 from .pascal_voc import pascal_voc
+from .loar import loar
 from .attr_bpad import attr_bpad
 from . import factory
 
