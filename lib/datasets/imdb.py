@@ -105,7 +105,8 @@ class imdb(object):
             oldx2 = boxes[:, 2].copy()
             boxes[:, 0] = widths[i] - oldx2 - 1
             boxes[:, 2] = widths[i] - oldx1 - 1
-            assert (boxes[:, 2] >= boxes[:, 0]).all()
+            assert (boxes[:, 2] >= boxes[:, 0]).all(), \
+                "Error boxes: No:%d Path:%s Width:%d Boxes:\n%s" % (i, self.image_path_at(i), widths[i], boxes)
             entry = {'boxes' : boxes,
                      'gt_overlaps' : self.roidb[i]['gt_overlaps'],
                      'gt_classes' : self.roidb[i]['gt_classes'],

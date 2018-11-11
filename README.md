@@ -82,6 +82,20 @@ Test a R\*CNN classifier
 	--net output/default/voc_2012_trainval/vgg16_fast_rstarcnn_joint_iter_40000.caffemodel
 ```
 
+Train a R\*CNN classifier on LoAR dataset.
+
+```Shell
+./tools/train_loar.py --gpu 0 --solver models/VGG16_RstarCNN_loar/solver.prototxt \
+	--weights reference_models/VGG16.v2.caffemodel
+```
+
+Test a R\*CNN classifier on LoAR dataset.
+
+```Shell
+./tools/test_loar.py --gpu 0 --def models/VGG16_RstarCNN_loar/test.prototxt \
+	--net output/default/loar_train/vgg16_fast_rcnn_joint_loar_train_iter_40000.caffemodel
+```
+
 ### Downloads
 
 1. PASCAL VOC 2012 Action Dataset

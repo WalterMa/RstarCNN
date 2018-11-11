@@ -23,7 +23,7 @@ import scipy.sparse
 import scipy.io as sio
 import utils.cython_bbox
 import cPickle
-import subprocess
+import PIL
 
 class loar(datasets.imdb):
     def __init__(self, image_set, devkit_path=None):
@@ -279,7 +279,27 @@ class loar(datasets.imdb):
                     score = all_boxes[i,2+cls_ind]
                     
                     f.write('{:s} {:d} {:.3f}\n'.
-                            format(index, voc_id, score))           
+                            format(index, voc_id, score))
+
+    def append_flipped_roidb(self):
+        num_images = self.num_images
+        widths = [PIL.Image.open(self.image_path_at(i)).size[0]
+                  for i in xrange(num_images)]
+        for i in xrange(num_images):
+            boxes = self.roidb[i]['boxes'].copy()
+            oldx1 = boxes[:, 0].copy()
+            oldx2 = boxes[:, 2].copy()
+            # Do not need to minus 1 when flip bbox
+            boxes[:, 0] = widths[i] - oldx2
+            boxes[:, 2] = widths[i] - oldx1
+            assert (boxes[:, 2] >= boxes[:, 0]).all(), \
+                "Error boxes: No:%d Path:%s Width:%d Boxes:\n%s" % (i, self.image_path_at(i), widths[i], boxes)
+            entry = {'boxes' : boxes,
+                     'gt_overlaps' : self.roidb[i]['gt_overlaps'],
+                     'gt_classes' : self.roidb[i]['gt_classes'],
+                     'flipped' : True}
+            self.roidb.append(entry)
+        self._image_index = self._image_index * 2
 
 
 if __name__ == '__main__':
